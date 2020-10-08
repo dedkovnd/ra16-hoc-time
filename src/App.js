@@ -13,9 +13,19 @@ function DateTime(props) {
 function  dateTimePretty(Component) {
     return class extends React.Component {
         render() {
-          const now = moment()
-          console.log(now.diff(this.props.date))
-        return <Component {...this.props}/>
+            function formatDate(date){
+                const now = moment()
+                const period = now.diff(date, 'days')
+                if( period > 365) {
+                    return `${Math.round(period/365 )} года назад`
+                } else if ( Math.round(period) === 365 ) {
+                    return `один год назад`
+                } else if (period < 365) {
+                    return `${Math.round(period)} дней назад`
+                }
+            }
+            const formatedDate = formatDate(this.props.date)
+        return <Component {...this.props} date={formatedDate}/>
       }
     }
 }
@@ -25,7 +35,6 @@ function Video(props) {
   return (
       <div className="video">
         <iframe src={props.url} frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        {/*<DateTime date={props.date} />*/}
         <DateTimePretty date={props.date}/>
       </div>
   )
